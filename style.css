@@ -1,0 +1,163 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f4f4f4;
+  transition: 0.3s;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #222;
+  color: white;
+}
+
+header button {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+/* Controls */
+.controls {
+  padding: 20px;
+  text-align: center;
+}
+
+.controls input[type="text"] {
+  padding: 8px;
+  width: 250px;
+  margin-bottom: 10px;
+}
+
+.filters {
+  margin: 10px 0;
+}
+
+.filter-btn {
+  padding: 6px 12px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+/* Gallery Grid */
+.gallery {
+  column-count: 3;
+  column-gap: 15px;
+  padding: 20px;
+}
+
+.gallery img {
+  width: 100%;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.gallery img:hover {
+  transform: scale(1.03);
+}
+
+/* Loader */
+.loader {
+  display: none;
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal img {
+  max-width: 70%;
+  border-radius: 10px;
+}
+.modal img {
+  max-width: 60%;
+  border-radius: 10px;
+}
+
+#imageDetails {
+  color: white;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.modal-controls {
+  margin-top: 15px;
+}
+
+.modal-controls button {
+  margin: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+#closeModal {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  font-size: 35px;
+  color: white;
+  cursor: pointer;
+}
+body.dark {
+  background: #111;
+  color: white;
+}
+
+body.dark header {
+  background: #000;
+}
+
+body.dark .filter-btn,
+body.dark input {
+  background: #333;
+  color: white;
+  border: 1px solid #555;
+}
+.gallery div {
+  position: relative;
+}
+
+.like-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 5px 8px;
+  border: none;
+  cursor: pointer;
+  background: white;
+  border-radius: 5px;
+}
+
+.like-btn.liked {
+  background: red;
+  color: white;
+}
+.gallery img {
+  transition: transform 0.3s ease;
+}
+
+.gallery img:hover {
+  transform: scale(1.03);
+}

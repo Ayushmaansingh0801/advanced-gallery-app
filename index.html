@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Advanced Gallery</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>Advanced Gallery</h1>
+    <button id="themeToggle">🌙</button>
+  </header>
+
+  <!-- Controls -->
+  <section class="controls">
+    <input type="text" id="searchInput" placeholder="Search images...">
+
+    <div class="filters">
+      <button class="filter-btn" data-category="all">All</button>
+      <button class="filter-btn" data-category="nature">Nature</button>
+      <button class="filter-btn" data-category="cars">Cars</button>
+      <button class="filter-btn" data-category="animals">Animals</button>
+    </div>
+
+    <input type="file" id="uploadInput" accept="image/*">
+  </section>
+
+  <!-- Loading Spinner -->
+  <div id="loader" class="loader">Loading...</div>
+
+  <!-- Gallery -->
+  <section id="gallery" class="gallery"></section>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div id="imageDetails"></div>
+    <span id="closeModal">&times;</span>
+    <img id="modalImage">
+    <div class="modal-controls">
+      <button id="prevBtn">⬅</button>
+      <button id="nextBtn">➡</button>
+      <button id="downloadBtn">Download</button>
+    </div>
+    <div id="imageDetails"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
