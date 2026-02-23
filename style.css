@@ -1,163 +1,243 @@
+/* ================= GLOBAL RESET ================= */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
-  background: #f4f4f4;
-  transition: 0.3s;
+  background: #f2f2f2;
+  color: #111;
+  transition: background 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
 }
 
-/* Header */
-header {
+/* ================= HEADER ================= */
+
+.top-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background: #222;
-  color: white;
+  padding: 15px;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-header button {
-  padding: 8px 12px;
+.top-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+#themeToggle {
+  background: none;
+  border: none;
+  font-size: 22px;
   cursor: pointer;
 }
 
-/* Controls */
+/* ================= CONTROLS ================= */
+
 .controls {
-  padding: 20px;
-  text-align: center;
+  padding: 10px;
+  background: white;
 }
 
-.controls input[type="text"] {
-  padding: 8px;
-  width: 250px;
+.controls input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
   margin-bottom: 10px;
+  font-size: 14px;
 }
 
 .filters {
-  margin: 10px 0;
+  display: flex;
+  gap: 8px;
 }
 
 .filter-btn {
-  padding: 6px 12px;
-  margin: 5px;
-  cursor: pointer;
-}
-
-/* Gallery Grid */
-.gallery {
-  column-count: 3;
-  column-gap: 15px;
-  padding: 20px;
-}
-
-.gallery img {
-  width: 100%;
-  margin-bottom: 15px;
+  flex: 1;
+  padding: 8px;
   border-radius: 10px;
+  border: none;
+  background: #e9e9e9;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
-.gallery img:hover {
-  transform: scale(1.03);
+.filter-btn:hover {
+  background: #dcdcdc;
 }
 
-/* Loader */
-.loader {
-  display: none;
-  text-align: center;
-  padding: 20px;
-  font-size: 18px;
-  font-weight: bold;
+/* ================= GALLERY GRID ================= */
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 6px;
+  padding: 6px;
 }
 
-/* Modal */
+.card {
+  overflow: hidden;
+  border-radius: 14px;
+  position: relative;
+}
+
+.card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.card img:hover {
+  transform: scale(1.06);
+}
+
+/* Multi Select Highlight */
+
+.selected {
+  border: 4px solid #00ffd5;
+  border-radius: 14px;
+}
+
+/* ================= FULL SCREEN MODAL ================= */
+
 .modal {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.9);
-  display: flex;
+  background: black;
   flex-direction: column;
+  justify-content: space-between;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Top Bar */
+
+.modal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  color: white;
+  font-size: 16px;
+}
+
+/* Image Container */
+
+.modal-body {
+  flex: 1;
+  display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
-.modal img {
-  max-width: 70%;
-  border-radius: 10px;
-}
-.modal img {
-  max-width: 60%;
-  border-radius: 10px;
-}
-
-#imageDetails {
-  color: white;
-  text-align: center;
-  margin-top: 15px;
-}
-
-.modal-controls {
-  margin-top: 15px;
-}
-
-.modal-controls button {
-  margin: 5px;
-  padding: 8px 12px;
-  cursor: pointer;
-}
-
-#closeModal {
-  position: absolute;
-  top: 20px;
-  right: 40px;
-  font-size: 35px;
-  color: white;
-  cursor: pointer;
-}
-body.dark {
-  background: #111;
-  color: white;
-}
-
-body.dark header {
-  background: #000;
-}
-
-body.dark .filter-btn,
-body.dark input {
-  background: #333;
-  color: white;
-  border: 1px solid #555;
-}
-.gallery div {
-  position: relative;
-}
-
-.like-btn {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  padding: 5px 8px;
-  border: none;
-  cursor: pointer;
-  background: white;
-  border-radius: 5px;
-}
-
-.like-btn.liked {
-  background: red;
-  color: white;
-}
-.gallery img {
+.modal-body img {
+  width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
   transition: transform 0.3s ease;
 }
 
-.gallery img:hover {
-  transform: scale(1.03);
+/* Slide Animation */
+
+.slide {
+  animation: slideAnim 0.3s ease;
+}
+
+@keyframes slideAnim {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Zoom Effect */
+
+.zoomed {
+  transform: scale(1.8);
+}
+
+/* Bottom Controls */
+
+.modal-bottom {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 15px;
+}
+
+.modal-bottom button {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.modal-bottom button:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Image Details */
+
+.image-details {
+  color: white;
+  text-align: center;
+  font-size: 14px;
+  padding-bottom: 15px;
+}
+
+/* ================= DARK MODE ================= */
+
+body.dark {
+  background: #121212;
+  color: white;
+}
+
+body.dark .top-header,
+body.dark .controls {
+  background: #1a1a1a;
+}
+
+body.dark .filter-btn {
+  background: #333;
+  color: white;
+}
+
+body.dark .filter-btn:hover {
+  background: #444;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (min-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .card img {
+    height: 220px;
+  }
+
+  .modal-body img {
+    max-height: 85vh;
+  }
 }

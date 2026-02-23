@@ -1,50 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Advanced Gallery</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced Mobile Gallery</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <h1>Advanced Gallery</h1>
+  <!-- HEADER -->
+  <header class="top-header">
+    <h1>My Gallery</h1>
     <button id="themeToggle">🌙</button>
   </header>
 
-  <!-- Controls -->
+  <!-- CONTROLS -->
   <section class="controls">
-    <input type="text" id="searchInput" placeholder="Search images...">
+    <input type="text" id="searchInput" placeholder="Search images..." />
 
     <div class="filters">
       <button class="filter-btn" data-category="all">All</button>
       <button class="filter-btn" data-category="nature">Nature</button>
       <button class="filter-btn" data-category="cars">Cars</button>
-      <button class="filter-btn" data-category="animals">Animals</button>
     </div>
-
-    <input type="file" id="uploadInput" accept="image/*">
   </section>
 
-  <!-- Loading Spinner -->
-  <div id="loader" class="loader">Loading...</div>
-
-  <!-- Gallery -->
+  <!-- GALLERY GRID -->
   <section id="gallery" class="gallery"></section>
 
-  <!-- Modal -->
+  <!-- FULL SCREEN MODAL (Mobile Style) -->
   <div id="modal" class="modal">
-    <div id="imageDetails"></div>
-    <span id="closeModal">&times;</span>
-    <img id="modalImage">
-    <div class="modal-controls">
-      <button id="prevBtn">⬅</button>
-      <button id="nextBtn">➡</button>
-      <button id="downloadBtn">Download</button>
+
+    <!-- Top Bar -->
+    <div class="modal-top">
+      <span id="closeModal">←</span>
+      <span id="modalTitle">Image</span>
     </div>
-    <div id="imageDetails"></div>
+
+    <!-- Image Container -->
+    <div class="modal-body">
+      <img id="modalImage" />
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="modal-bottom">
+      <button id="prevBtn">◀</button>
+      <button id="downloadBtn">⬇</button>
+      <button id="nextBtn">▶</button>
+    </div>
+
+    <!-- Image Details -->
+    <div id="imageDetails" class="image-details"></div>
+
   </div>
 
   <script src="script.js"></script>
+
 </body>
 </html>
