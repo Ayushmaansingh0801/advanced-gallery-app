@@ -1,4 +1,6 @@
-console.log("Ultimate Mobile Gallery Running");
+console.log("🔥 LEGENDARY GALLERY RUNNING");
+
+/* ================= ELEMENTS ================= */
 
 const gallery = document.getElementById("gallery");
 const modal = document.getElementById("modal");
@@ -13,29 +15,39 @@ const searchInput = document.getElementById("searchInput");
 const filterButtons = document.querySelectorAll(".filter-btn");
 const themeToggle = document.getElementById("themeToggle");
 
+/* ================= VARIABLES ================= */
+
 let images = [];
 let activeImages = [];
 let currentIndex = 0;
 let multiSelectMode = false;
 let selectedImages = [];
-let lastTap = 0;
+let page = 1;
+let loading = false;
 
-/* ================= FETCH ================= */
+/* ================= FETCH IMAGES ================= */
 
 async function fetchImages() {
-  const res = await fetch("https://picsum.photos/v2/list?page=1&limit=20");
+  if (loading) return;
+  loading = true;
+
+  const res = await fetch(`https://picsum.photos/v2/list?page=${page}&limit=20`);
   const data = await res.json();
 
-  images = data.map(item => ({
-    id: Number(item.id),
-    url: `https://picsum.photos/id/${item.id}/900/700`,
+  const newImages = data.map(item => ({
+    id: Number(item.id) + page * 1000,
+    url: `https://picsum.photos/id/${item.id}/1000/800`,
     title: item.author,
     category: Number(item.id) % 2 === 0 ? "nature" : "cars",
     date: "2026"
   }));
 
+  images = [...images, ...newImages];
   renderImages(images);
+  page++;
+  loading = false;
 }
+
 fetchImages();
 
 /* ================= RENDER ================= */
@@ -44,20 +56,15 @@ function renderImages(data) {
   gallery.innerHTML = "";
   activeImages = data;
 
-  if (data.length === 0) {
-    gallery.innerHTML = "<h2>No Images Found</h2>";
-    return;
-  }
-
   data.forEach(image => {
     const card = document.createElement("div");
     card.classList.add("card");
 
     const img = document.createElement("img");
     img.src = image.url;
-    img.dataset.id = image.id;
+    img.loading = "lazy";
 
-    img.addEventListener("click", e => {
+    img.addEventListener("click", () => {
       if (multiSelectMode) {
         toggleSelect(image.id, card);
       } else {
@@ -69,7 +76,17 @@ function renderImages(data) {
     card.appendChild(img);
     gallery.appendChild(card);
   });
+
+  updateSelectionCounter();
 }
+
+/* ================= INFINITE SCROLL ================= */
+
+window.addEventListener("scroll", () => {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+    fetchImages();
+  }
+});
 
 /* ================= MULTI SELECT ================= */
 
@@ -81,7 +98,62 @@ function toggleSelect(id, card) {
     selectedImages.push(id);
     card.classList.add("selected");
   }
+  updateSelectionCounter();
 }
+
+gallery.addEventListener("contextmenu", e => {
+  e.preventDefault();
+  multiSelectMode = !multiSelectMode;
+  document.body.classList.toggle("multi-mode");
+});
+
+/* ================= SELECTION COUNTER ================= */
+
+function updateSelectionCounter() {
+  let counter = document.getElementById("selectCount");
+
+  if (!counter) {
+    counter = document.createElement("div");
+    counter.id = "selectCount";
+    document.body.appendChild(counter);
+  }
+
+  if (selectedImages.length > 0) {
+    counter.innerText = `Selected: ${selectedImages.length}`;
+    counter.style.display = "block";
+  } else {
+    counter.style.display = "none";
+  }
+}
+
+/* ================= BULK DOWNLOAD ================= */
+
+async function bulkDownload() {
+  if (selectedImages.length === 0) return alert("No images selected");
+
+  const zip = new JSZip();
+  const folder = zip.folder("Gallery");
+
+  for (let id of selectedImages) {
+    const img = images.find(i => i.id === id);
+    const res = await fetch(img.url);
+    const blob = await res.blob();
+    folder.file(`image-${id}.jpg`, blob);
+  }
+
+  zip.generateAsync({ type: "blob" }).then(content => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(content);
+    a.download = "gallery-images.zip";
+    a.click();
+  });
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "d" && multiSelectMode) {
+    bulkDownload();
+  }
+});
 
 /* ================= MODAL ================= */
 
@@ -92,60 +164,68 @@ function openModal() {
 
 function updateModal() {
   const img = activeImages[currentIndex];
-  modalImage.classList.remove("slide");
-  void modalImage.offsetWidth;
-  modalImage.classList.add("slide");
-
   modalImage.src = img.url;
   modalTitle.textContent = img.title;
 
   imageDetails.innerHTML = `
-    <p>${img.category}</p>
-    <p>${img.date}</p>
+    <p>Category: ${img.category}</p>
+    <p>Date: ${img.date}</p>
   `;
 }
 
 closeModal.addEventListener("click", () => modal.style.display = "none");
 
-/* ================= NEXT / PREV ================= */
-
-function nextImage() {
-  currentIndex++;
-  if (currentIndex >= activeImages.length) currentIndex = 0;
+nextBtn.addEventListener("click", () => {
+  currentIndex = (currentIndex + 1) % activeImages.length;
   updateModal();
-}
-
-function prevImage() {
-  currentIndex--;
-  if (currentIndex < 0) currentIndex = activeImages.length - 1;
-  updateModal();
-}
-
-nextBtn.addEventListener("click", nextImage);
-prevBtn.addEventListener("click", prevImage);
-
-/* ================= SWIPE ================= */
-
-let startX = 0;
-
-modalImage.addEventListener("touchstart", e => {
-  startX = e.touches[0].clientX;
 });
 
-modalImage.addEventListener("touchend", e => {
-  let endX = e.changedTouches[0].clientX;
-  if (startX - endX > 50) nextImage();
-  if (endX - startX > 50) prevImage();
+prevBtn.addEventListener("click", () => {
+  currentIndex =
+    (currentIndex - 1 + activeImages.length) % activeImages.length;
+  updateModal();
 });
 
-/* ================= DOUBLE TAP ZOOM ================= */
+/* ================= ZOOM ================= */
 
-modalImage.addEventListener("click", () => {
-  const now = new Date().getTime();
-  if (now - lastTap < 300) {
-    modalImage.classList.toggle("zoomed");
-  }
-  lastTap = now;
+let scale = 1;
+let posX = 0;
+let posY = 0;
+let isDragging = false;
+let startX, startY;
+
+function updateTransform() {
+  modalImage.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+}
+
+modalImage.addEventListener("dblclick", () => {
+  scale = scale === 1 ? 2 : 1;
+  updateTransform();
+});
+
+modalImage.addEventListener("wheel", e => {
+  e.preventDefault();
+  scale += e.deltaY * -0.001;
+  scale = Math.min(Math.max(1, scale), 4);
+  updateTransform();
+});
+
+modalImage.addEventListener("mousedown", e => {
+  if (scale === 1) return;
+  isDragging = true;
+  startX = e.clientX - posX;
+  startY = e.clientY - posY;
+});
+
+document.addEventListener("mousemove", e => {
+  if (!isDragging) return;
+  posX = e.clientX - startX;
+  posY = e.clientY - startY;
+  updateTransform();
+});
+
+document.addEventListener("mouseup", () => {
+  isDragging = false;
 });
 
 /* ================= SEARCH ================= */
@@ -172,24 +252,4 @@ filterButtons.forEach(btn => {
 
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
-});
-
-/* ================= DOWNLOAD ================= */
-
-downloadBtn.addEventListener("click", async () => {
-  const res = await fetch(activeImages[currentIndex].url);
-  const blob = await res.blob();
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "image.jpg";
-  a.click();
-});
-
-/* ================= LONG PRESS FOR MULTI SELECT ================= */
-
-gallery.addEventListener("contextmenu", e => {
-  e.preventDefault();
-  multiSelectMode = !multiSelectMode;
 });
